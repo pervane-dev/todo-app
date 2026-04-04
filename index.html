@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Advanced ToDo App</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+  text-align: center;
+  padding: 50px;
+}
+
+.container {
+  max-width: 400px;
+  margin: auto;
+}
+
+input {
+  padding: 12px;
+  width: 70%;
+  border-radius: 8px;
+  border: none;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #22c55e;
+  cursor: pointer;
+}
+
+ul {
+  margin-top: 20px;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+  background: #1e293b;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+}
+
+li:hover {
+  transform: scale(1.03);
+}
+
+.done {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.delete {
+  background: red;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🚀 ToDo App</h1>
+
+  <input id="task" placeholder="Yeni task yaz...">
+  <button onclick="addTask()">Əlavə et</button>
+
+  <ul id="list"></ul>
+</div>
+
+<script>
+
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function render() {
+  let list = document.getElementById("list");
+  list.innerHTML = "";
+
+  tasks.forEach((task, index) => {
+    let li = document.createElement("li");
+
+    if(task.done) li.classList.add("done");
+
+    li.innerHTML = 
+      ${task.text}
+      <span class="delete" onclick="deleteTask(${index})">X</span>
+    ;
+
+    li.onclick = () => toggleTask(index);
+
+    list.appendChild(li);
+  });
+}
+
+function addTask() {
+  let input = document.getElementById("task");
+
+  if(input.value === "") return;
+
+  tasks.push({ text: input.value, done: false });
+  input.value = "";
+
+  saveTasks();
+  render();
+}
+
+function toggleTask(index) {
+  tasks[index].done = !tasks[index].done;
+  saveTasks();
+  render();
+}
+
+function deleteTask(index) {
+  tasks.splice(index, 1);
+  saveTasks();
+  render();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
